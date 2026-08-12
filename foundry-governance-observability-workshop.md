@@ -558,6 +558,30 @@ The agenda totals **240 minutes**.
 - Do not test with real customer personal, confidential, regulated, or production data.
 - **Verify in the current Microsoft Foundry portal** whenever a label or navigation path differs.
 
+## Portal topic coverage map
+
+The following topics are integrated into the existing modules and do not add time to the 240-minute agenda. Each row is either a participant task, a guided review, or a design exercise when the capability is preview, permission-dependent, or not appropriate for a live change during the workshop.
+
+| Portal header | Workshop section | Lab task or guided activity | Mode | Evidence produced |
+|---|---|---|---|---|
+| **Observability: Overview** | Observability foundations | Write three operational questions for `<SCENARIO_NAME>` and map each question to a trace, log, metric, evaluation, or alert. | Participant task | Signal-to-question map |
+| **Observability: Monitoring** | Logs, metrics, alerts, and retention | Review prepared Application Insights and Log Analytics views; record request volume, latency, errors, retention, access, and cost questions. | Guided review | Monitoring review record |
+| **Observability: Tracing** | Traces: understand the execution | Locate a Module 5 interaction, inspect the span waterfall, and record trace ID, duration, slowest span, status, and sensitive-data observations. | Participant task | Trace evidence card |
+| **Observability: Troubleshooting** | Troubleshooting and operational decisions | Use a seeded slow, failed, or incomplete interaction to correlate the Foundry trace with available Azure Monitor evidence and identify the next diagnostic step. | Participant task or prepared fallback | Troubleshooting hypothesis |
+| **Evaluation: Rate limits and regions** | Network, data, and deployment governance | Record `<REGION>`, deployment type, quota/capacity assumptions, rate-limit risks, and the owner responsible for validating availability. | Participant task | Region and capacity assumptions |
+| **Evaluation: Safety evaluations transparency note** | Responsible AI and safety by design | Review the current transparency note or evaluator guidance and document limitations, intended use, human-review requirements, and prohibited conclusions. | Guided review | Evaluator limitations note |
+| **Evaluation: Supported evaluators** | Evaluations: measure what “good” means | Inspect the current evaluator catalog and select two quality evaluators and one safety evaluator appropriate to the scenario, target, and scope. | Participant task | Evaluator selection record |
+| **Evaluation: Run evaluations** | Evaluations: measure what “good” means | Run or open `<EVALUATION_NAME>` using `<EVALUATION_DATASET>`; inspect aggregate and row-level results and identify one pass and one failure. | Participant task | Evaluation result summary |
+| **Evaluation: Optimization** | Lifecycle management and release gates | Compare two prepared instruction or configuration variants using evaluation results; recommend keep, revise, or reject and explain the evidence. | Participant task | Optimization decision |
+| **Evaluation: AI red teaming** | Responsible AI and safety by design | Run synthetic prompt-injection, sensitive-data, ambiguity, and unsupported-policy tests; classify the response as refuse, clarify, safe-complete, or escalate. | Participant task | Red-team test record |
+| **Evaluation: Evaluations in CI/CD pipelines** | Lifecycle management and release gates | Design a release gate on paper: dataset version, evaluator thresholds, approval owner, failure action, and retest requirement. No external CI/CD tool is required. | Design exercise | Release-gate specification |
+| **Trust and safety: Guardrails and controls** | Policy, compliance, and guardrails | Review available guardrails and controls, then map each control to a risk, scope, owner, evidence source, and exception path. | Participant task or guided review | Guardrail control map |
+| **Trust and safety: Responsible AI** | Responsible AI and safety by design | Complete a risk-to-control matrix covering identity, data, application design, Foundry controls, monitoring, evaluation, and human response. | Participant task | Responsible AI risk matrix |
+
+> **Portal variance rule:** Header names, entry points, evaluator availability, regional support, and preview status can change. **Verify in the current Microsoft Foundry portal** and current Microsoft Learn documentation before delivery. Do not substitute a remembered legacy path.
+
+> **Scope rule:** The workshop remains centered on Microsoft Foundry and Azure. Agent 365 is out of scope and is not required for any topic, task, dependency, or demo.
+
 ## Lab preparation values
 
 Before Module 1, the instructor should provide:

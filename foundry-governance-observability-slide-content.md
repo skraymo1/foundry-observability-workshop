@@ -976,3 +976,33 @@ Documentation validation must include the live **NEW Microsoft Foundry portal**.
 - [ ] The 4-hour agenda totals 240 minutes.
 - [ ] The lab includes setup validation, troubleshooting, evidence capture, and cleanup.
 - [ ] Current Microsoft Learn documentation and portal navigation were validated before delivery.
+
+---
+
+## Appendix slide D — Portal topic coverage and lab task map
+
+**Subtitle / key message:** Every important portal topic becomes either a participant task, a guided review, or a release-design exercise.
+
+**Bullets**
+
+- **Observability:** Overview, Monitoring, Tracing, and Troubleshooting are covered through signal mapping, telemetry review, trace inspection, and seeded-failure diagnosis.
+- **Evaluation:** Rate limits and regions, transparency, supported evaluators, and running evaluations are covered through availability checks and a small evaluation run.
+- **Evaluation maturity:** Optimization, AI red teaming, and CI/CD evaluation gates are covered through comparison, adversarial testing, and release-gate design.
+- **Trust and safety:** Guardrails and controls plus Responsible AI are covered through risk-to-control mapping and human-response planning.
+- All activities fit inside the existing 240-minute agenda; no external CI/CD tool or non-Azure dependency is required.
+
+**Speaker notes**
+
+Use this slide to make the workshop coverage explicit. The intent is not to perform every production operation live. Where a capability is permission-dependent, preview, or unsafe to change during a customer workshop, participants review prepared evidence or complete a design exercise instead.
+
+**Suggested visual**
+
+Four-quadrant map: **Observe → Evaluate → Optimize → Govern**, with the portal headers and lab task icons inside each quadrant.
+
+**Demo or lab tie-in**
+
+Use the full coverage matrix in the workshop guide to assign each topic to a module and collect the corresponding evidence artifact.
+
+**Portal verification note**
+
+Header names, evaluator availability, region support, and portal entry points must be checked before delivery. **Verify in the current Microsoft Foundry portal** and current Microsoft Learn documentation.
