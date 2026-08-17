@@ -24,11 +24,14 @@
 | 12 | Reference architecture | Content | 4 min |
 | 13 | Section — Hands-on lab | Divider | — |
 | 14 | Lab modules and rules of engagement | Content | 3 min |
-| 15 | Takeaways and next steps | Closing | 5 min |
+| 15 | Multi-model strategy and agent frameworks | Content | 4 min |
+| 16 | Foundry observability and partner platforms | Content | 3 min |
+| 17 | Takeaways and next steps | Closing | 5 min |
 | A1 | Appendix — Preview capabilities to validate | Appendix | — |
 | A2 | Appendix — Troubleshooting quick reference | Appendix | — |
+| A3 | Appendix — Competitive positioning caveats | Appendix | — |
 
-Slide-facing time is roughly 42 minutes; the remaining time is the 30-minute lab plus transitions.
+Slide-facing time is roughly 42 minutes with Slides 15 and 16 held for competitive audiences; the remaining time is the 30-minute lab plus transitions. If Slides 15 and 16 are delivered, trim the portal orientation and observability segments as described in the workshop agenda.
 
 ---
 
@@ -336,7 +339,51 @@ Slide-facing time is roughly 42 minutes; the remaining time is the 30-minute lab
 
 ---
 
-## Slide 15 — Takeaways and next steps
+## Slide 15 — Multi-model strategy and agent frameworks
+
+**Subtitle / key message:** Govern once, change models freely.
+
+**Bullets**
+
+- **All current Claude models are available in the Microsoft Foundry catalog** — Azure-native endpoint, Entra ID auth, Azure Marketplace billing.
+- Each deployment picks a **hosting option**: Hosted on Azure (data stays in Azure, US Data Zone Standard) or Hosted on Anthropic.
+- Azure-hosted deployments trade some provider features — server-side tools, MCP connector, Agent Skills, structured outputs.
+- Microsoft Agent Framework is the build-time layer; Foundry Agent Service is the governed run time.
+- Agent 365 is out of scope and not required for anything discussed here.
+
+**Speaker notes:** Lead with availability, then the design choice. Every current Claude model is in the Foundry catalog — verified against the portal, the live catalog API, and Anthropic's own Foundry documentation. Do not underclaim here; a customer arriving from the Claude Platform docs often assumes Azure has nothing, and that assumption is wrong. The real design decision is the hosting option, selected per deployment and surfaced as a model version: Hosted on Azure keeps prompts and completions inside Azure and supports US Data Zone Standard but blocks certain provider features by design; Hosted on Anthropic runs on Anthropic infrastructure with the full feature set. Both go through the same Foundry endpoint, RBAC, and Azure bill, and a customer can run both in the same resource. Do not claim blanket feature parity and do not speculate on roadmap. The agent angle is the strong one: because Azure-hosted deployments do not expose server-side tools or the MCP connector, the customer implements tool orchestration in their own layer — which is exactly what Microsoft Agent Framework is for. Compare like for like: Microsoft Agent Framework is the consolidation of Semantic Kernel and AutoGen and sits at the same layer as a provider agent SDK; Foundry Agent Service has no direct single-vendor equivalent and is where this workshop's governance story attaches.
+
+**Suggested visual:** Two-layer diagram — build time (Microsoft Agent Framework beside a provider agent SDK) above run time (Foundry Agent Service spanning the full width) with a shared governance band underneath. Optional inset: the Hosted on Azure vs Hosted on Anthropic comparison.
+
+**Demo or lab tie-in:** Search the model catalog for "Claude" live to show the full list, then point back to the Module 1 project context: the governance boundary did not change with the model.
+
+**Portal verification note:** Catalog contents, hosting options, versions, deployment types, and regions change frequently. **Verify in the current Microsoft Foundry portal** and in current Anthropic Foundry documentation before making any parity claim.
+
+---
+
+## Slide 16 — Foundry observability and partner platforms
+
+**Subtitle / key message:** OpenTelemetry means coexistence, not a replacement decision.
+
+**Bullets**
+
+- Foundry tracing follows OpenTelemetry semantic conventions, so spans are portable.
+- Default destination is the connected `<APPLICATION_INSIGHTS>` resource.
+- An additional exporter or span processor can send the same spans to a partner platform such as Arize.
+- Foundry-native fits the governed release gate; partner platforms fit cross-application AI observability.
+- Duplicated trace data needs the same access, retention, and redaction controls.
+
+**Speaker notes:** If the customer already runs Arize, do not position this as a rip-and-replace. The honest answer is that most enterprises end up with both: Foundry-native evaluation and safety evaluators for the release gate, and a partner platform for cross-application analysis and a shared data-science workflow. Note that Arize is available as an Azure Native ISV integration, so procurement can stay in Azure. Close with the governance warning — exporting spans duplicates potentially sensitive prompt and response content, so the second destination needs the same controls and a named owner. That is a governance decision, not just a tooling decision.
+
+**Suggested visual:** Single OpenTelemetry stream branching to two destinations — Application Insights and a partner platform — with one shared governance boundary drawn around both.
+
+**Demo or lab tie-in:** Reuse the Module 2 trace and ask where else that content would land under the customer's current architecture.
+
+**Portal verification note:** Confirm current tracing export behavior and partner integration mechanics. **Verify in the current Microsoft Foundry portal** and against current partner documentation.
+
+---
+
+## Slide 17 — Takeaways and next steps
 
 **Subtitle / key message:** Govern the system, observe the behavior, evaluate the outcome, decide with evidence.
 
@@ -402,6 +449,28 @@ Slide-facing time is roughly 42 minutes; the remaining time is the 30-minute lab
 
 ---
 
+## Appendix A3 — Competitive positioning caveats
+
+**Subtitle / key message:** Say what is true, and say what you must verify.
+
+**Bullets**
+
+- All current Claude models are available in the Foundry catalog — do not underclaim; verify hosting options and regions.
+- Hosting option is the real design choice: Hosted on Azure keeps data in Azure; Hosted on Anthropic has the full feature set.
+- Azure-hosted deployments block server-side tools, MCP connector, Agent Skills, structured outputs, and the Files API.
+- Microsoft Agent Framework compares to a provider agent SDK, not to the whole Foundry platform.
+- Partner observability is coexistence via OpenTelemetry, not a replacement argument.
+
+**Speaker notes:** Use this as a presenter guardrail rather than a customer-facing slide. Overstating parity loses a technical audience — but so does underclaiming, and underclaiming is the more common error here. Every current Claude model is genuinely in Foundry; the honest nuance is the per-deployment hosting option and the documented Azure-hosted feature gap. Other verified specifics worth having ready: hosting option appears as a model version in the deployment pane, models expose the Anthropic Messages API surface, Claude Consumption Unit billing runs through Azure Marketplace, Foundry SDK support covers C#, Java, PHP, Python, and TypeScript but not Go or Ruby, Foundry does not return Anthropic rate-limit headers, and Anthropic acts as an independent processor for Microsoft under its own data use terms. Claude Mythos Preview is invitation-only and should stay out of customer material. Where you are unsure, say "let me confirm the current state" rather than guessing.
+
+**Suggested visual:** Two-column "Say this / Verify this" table in muted tones.
+
+**Demo or lab tie-in:** None. Presenter reference only.
+
+**Portal verification note:** **Verify in the current Microsoft Foundry portal** before every delivery.
+
+---
+
 ## Presenter checklist
 
 - [ ] Every portal screenshot is from the **Microsoft Foundry portal**, captured within 48 hours.
@@ -414,3 +483,5 @@ Slide-facing time is roughly 42 minutes; the remaining time is the 30-minute lab
 - [ ] The prepared evaluation contains at least one failing row.
 - [ ] Slide-facing time plus the 30-minute lab fits inside 75 minutes.
 - [ ] Synthetic data only; no secrets or real customer data.
+- [ ] If Slides 15–16 are used, model catalog availability and framework GA status re-verified today.
+- [ ] No feature-parity claim is made that has not been verified.

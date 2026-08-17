@@ -59,6 +59,8 @@ The agenda totals **75 minutes**.
 | 30 min | Hands-on lab | Produce governance and observability evidence. | Guide Lab Modules 1–3 and triage issues. | Run a prompt, inspect a trace, review an evaluation. | Trace evidence and a readiness call. |
 | 5 min | Wrap-up and next steps | Convert findings into customer actions. | Present Slide 10; facilitate. | Share one gap and one owner. | Pilot next-step commitment. |
 
+> **Optional positioning swap.** If the audience is arriving from a competitive evaluation (Claude on another cloud, an existing Arize deployment, or an agent-framework comparison), trim the portal orientation to 7 minutes and the observability segment to 10 minutes, then insert the 8-minute positioning module from Deliverable 4A before the wrap-up. The total stays at 75 minutes.
+
 > No formal break is scheduled. For an in-person delivery, take a 5-minute break after the observability segment and reduce lab time to 25 minutes.
 
 ---
@@ -479,6 +481,166 @@ Use this during the portal orientation segment, or as the full replacement if pa
 
 ---
 
+# Deliverable 4A: Positioning addendum — Claude, agent frameworks, and partner observability
+
+Use this addendum when the customer arrives from the Claude Platform documentation on AWS, or when they already run Arize for AI observability. Deliver it in the wrap-up segment, or swap it in place of the reference-architecture discussion if it is the customer's primary interest.
+
+> **Verified against the live catalog and the portal.** **All Claude models listed here are available in Microsoft Foundry** — confirmed against the live Azure model catalog, the Foundry portal, and Anthropic's own Foundry documentation. Availability is not the issue; do not underclaim. The only nuance is the **hosting option** selected at deployment time, which determines where inference runs and therefore the data boundary and feature set. Both options are consumed through Foundry with the same Azure endpoint, identity, and billing. **Re-verify the catalog and the hosting table before every customer conversation — both change frequently.**
+
+## Talking point 1 — Claude in Microsoft Foundry: what is actually true
+
+**Customer question:** "On AWS we use the Claude Platform docs. Do you have a similar offering?"
+
+**Answer framing:** Yes — every Claude model listed below is available in Microsoft Foundry, with Azure-native endpoints, Entra ID authentication, and Azure Marketplace billing. The one design decision to explain is the hosting option, which controls the data boundary and the available feature set.
+
+### The two hosting options
+
+Every Claude model in the table below is offered through Foundry. What differs is where inference runs, selected per deployment.
+
+| | Hosted on Azure | Hosted on Anthropic |
+|---|---|---|
+| Where inference runs | Anthropic-operated service on Azure infrastructure | Anthropic-operated service on Anthropic infrastructure |
+| Model availability | Latest models in the Opus, Sonnet, and Haiku families | All Claude models available in Foundry |
+| Deployment types | Global Standard, US Data Zone Standard | Global Standard |
+| Prompt and completion data | Remains within Azure; only usage metadata and safety-flagged content egress | Processed on Anthropic infrastructure |
+| Recommended for | Most workloads | Access to models or features not yet hosted on Azure |
+
+### Hosting options by model
+
+**All 10 models below are available in Microsoft Foundry.** The columns show which hosting options each one supports — not whether it is offered. Verified against the Foundry portal, the live catalog, and Anthropic's Foundry documentation. **Re-verify before quoting it.**
+
+| Model (all available in Foundry) | Hosted on Azure | Hosted on Anthropic |
+|---|:---:|:---:|
+| Claude Opus 5 | Yes | Yes |
+| Claude Sonnet 5 | Yes | Yes |
+| Claude Opus 4.8 | Yes | Yes |
+| Claude Haiku 4.5 | Yes | Yes |
+| Claude Fable 5 | | Yes |
+| Claude Opus 4.7 | | Yes |
+| Claude Opus 4.6 | | Yes |
+| Claude Opus 4.5 | | Yes |
+| Claude Sonnet 4.6 | | Yes |
+| Claude Sonnet 4.5 | | Yes |
+
+The hosting option surfaces as a **model version** in the deployment pane — version 1 is Hosted on Anthropic, version 2 is Hosted on Azure. **Verify in the current Microsoft Foundry portal.**
+
+All models expose the Anthropic **Messages** API surface in the catalog, which affects SDK and client selection. Foundry SDK support covers C#, Java, PHP, Python, and TypeScript.
+
+> Claude Mythos Preview is invitation-only (Project Glasswing) and does not appear in the standard catalog search. Do not include it in customer-facing material.
+
+**The precise, defensible statement:** "Every current Claude model is available in Microsoft Foundry. When you deploy one, you choose a hosting option: Hosted on Azure keeps prompts and completions inside Azure and supports US Data Zone Standard, and Hosted on Anthropic runs on Anthropic infrastructure with the full provider feature set. Both are consumed through the same Foundry endpoint, identity model, and Azure bill. Let me confirm today's exact hosting matrix before you design around it."
+
+### Feature gap when hosted on Azure
+
+These features work on Anthropic-hosted deployments but return `400 Bad Request` on Azure-hosted deployments by design. This matters most to customers building agents.
+
+- Structured outputs
+- Server-side tools: web search, web fetch, code execution, tool search
+- MCP connector
+- Agent Skills
+- Programmatic tool calling
+- Files API
+
+Also not supported in Foundry generally: the Message Batches API and server-side fallback.
+
+**Why this matters for an agent conversation:** a customer who wants both full Azure data residency *and* server-side tools or MCP connector will hit this gap. The honest answer is that they choose: Azure-hosted for the data boundary, or Anthropic-hosted for the full feature set — and the choice can be made per deployment within the same Foundry resource.
+
+### What is genuinely differentiated
+
+| Dimension | Position |
+|---|---|
+| Endpoint | Azure-native: `https://{resource}.services.ai.azure.com/anthropic/v1/*` |
+| Identity | Microsoft Entra ID and Azure RBAC, or Azure-issued API keys |
+| Billing | Claude Consumption Units through Azure Marketplace on the existing Azure invoice |
+| Networking | The Foundry resource can be placed in an Azure Virtual Network |
+| Data residency | US Data Zone Standard keeps inference in the United States |
+| Observability | Azure Monitor, Log Analytics, and Cost Management apply to Claude usage |
+| Governance | The same Foundry project boundary, RBAC, tracing, and evaluation gate used everywhere else in this workshop |
+
+**The differentiated message:** The model layer changes constantly. The governance layer should not. Foundry lets a customer run Claude alongside other frontier, Microsoft, and open-weight models under one project boundary, one RBAC model, one tracing standard, and one evaluation gate — on their existing Azure paper.
+
+**Honest caveats to state out loud:**
+
+- Do not claim blanket feature parity with the Claude Platform. Every model is available in Foundry, but the Azure-hosted option has a documented feature gap.
+- Do not speculate about roadmap or which models gain Azure hosting next.
+- Anthropic acts as an independent processor for Microsoft; customers are subject to Anthropic's data use terms.
+- Foundry SDK support covers C#, Java, PHP, Python, and TypeScript. Go and Ruby are not natively supported.
+- Foundry does not return Anthropic's standard rate-limit headers.
+- **Re-verify the catalog, hosting table, and feature gaps in the current Microsoft Foundry portal and current Anthropic Foundry documentation before every customer conversation.**
+
+## Talking point 2 — Microsoft agent frameworks compared
+
+**Customer question:** "How do the Microsoft agent frameworks compare to the Claude Agent SDK?"
+
+**Answer framing:** They are not the same layer. Compare build-time to build-time and run-time to run-time.
+
+| Layer | Microsoft | Provider-specific equivalent | What it gives you |
+|---|---|---|---|
+| Build time | Microsoft Agent Framework | Claude Agent SDK | Agent definition, tools, orchestration, multi-agent workflows |
+| Run time and control plane | Microsoft Foundry Agent Service | No direct equivalent | Managed hosting, identity, tracing, evaluation, lifecycle |
+| Interop | MCP, A2A, and OpenTelemetry conventions | MCP and provider protocols | Cross-vendor tool and agent interoperability |
+
+**Key points for the conversation:**
+
+- Microsoft Agent Framework is the consolidation of the Semantic Kernel and AutoGen investments into one supported path for .NET and Python.
+- It is model-agnostic, and because Claude is available in Foundry with an Azure-native endpoint, a customer can orchestrate Claude-backed agents through Microsoft Agent Framework while keeping Azure identity, networking, and billing.
+- Foundry Agent Service is the operational layer this workshop's governance and observability story attaches to — identity, tracing, evaluation, and release gates.
+- A provider agent SDK can participate in a Microsoft Agent Framework workflow through supported protocols such as MCP and A2A; this is composition, not replacement.
+- **Agent 365 is out of scope and not required.** If agents come up, keep the discussion inside Microsoft Foundry and Azure.
+
+**The differentiated message:** A provider SDK is optimized for one model family. The Microsoft stack separates the build-time framework from the governed run time, so orchestration logic and governance controls are not coupled to a single model provider.
+
+**The agent-specific trade-off to raise:** Claude deployments hosted on Azure do not support server-side tools, the MCP connector, Agent Skills, programmatic tool calling, structured outputs, or the Files API. A customer building Claude agents therefore chooses between the Azure data boundary and the full provider feature set — or implements those capabilities in their own orchestration layer, which is exactly what Microsoft Agent Framework is for. This is a genuinely strong position: the framework can supply tool orchestration that the Azure-hosted deployment does not expose server-side.
+
+**Honest caveats to state out loud:**
+
+- Do not imply that using Microsoft Agent Framework means every provider feature is available; the Azure-hosted feature gap is real and returns errors by design.
+- Feature depth for a provider's own SDK against its own models will generally be ahead; do not claim otherwise.
+- Confirm current Microsoft Agent Framework connector support for a specific model before designing around it.
+
+> **Validate before delivery:** Microsoft Agent Framework and Foundry Agent Service capabilities, supported languages, model connector options, GA versus preview status, and protocol support change frequently. Confirm against current Microsoft Learn documentation.
+
+## Talking point 3 — Arize and partner observability
+
+**Customer question:** "We already use Arize. Does that conflict with Foundry observability?"
+
+**Answer framing:** No. It is a coexistence pattern, not a replacement decision.
+
+| Consideration | Position |
+|---|---|
+| Standard | Foundry tracing follows OpenTelemetry semantic conventions, so traces are portable. |
+| Default destination | Traces and telemetry flow to the connected `<APPLICATION_INSIGHTS>` resource. |
+| Partner export | An additional OpenTelemetry exporter or span processor can send the same spans to a partner platform. |
+| Commercial path | Arize is available as an Azure Native ISV integration, so procurement and billing can stay in Azure. |
+| Governance | The Foundry project boundary and Azure RBAC still govern who can invoke; partner tooling governs who can analyze. |
+
+**Decision guidance to offer:**
+
+- Use **Foundry-native** observability when the priority is the governed release gate: project-scoped traces, evaluations, safety evaluators, and Azure identity in one place.
+- Use a **partner platform** when the priority is cross-application AI observability, a shared data-science workflow, or an existing enterprise standard.
+- Use **both** when different teams need different views of the same OpenTelemetry data — this is the most common enterprise outcome.
+
+**Governance warning to state:** Exporting traces to a second platform duplicates potentially sensitive prompt and response content. Apply the same access, retention, and redaction controls to the partner destination that you apply to `<APPLICATION_INSIGHTS>`, and record that decision as a governance control with a named owner.
+
+> **Validate before delivery:** Partner integration mechanics, supported instrumentation, and Azure Native ISV availability change. Confirm against current partner documentation and the Azure Marketplace listing.
+
+## Optional discussion module (5–8 minutes)
+
+Run this immediately after Lab Module 3 if the audience is competitively focused. Add the time to the wrap-up segment or trim the portal orientation to 7 minutes.
+
+**Learning objective:** Position Microsoft Foundry against a single-provider model platform without overstating parity.
+
+**Do not use Agent 365 reminder:** Keep the comparison to Microsoft Foundry and Azure only.
+
+1. Ask: which model families must your governance model cover in the next 12 months?
+2. Ask: if you changed model providers next quarter, how much of your governance and observability work would you rebuild?
+3. Ask: who owns AI observability today — the platform team, the data-science team, or the application team?
+4. Record the answers as a one-page positioning summary: model strategy, framework strategy, observability strategy, and owner for each.
+
+**Expected result:** A written statement of which layer the customer wants Microsoft to own — model access, build-time framework, governed run time, observability, or all four.
+
+---
+
 # Deliverable 5: Assets checklist
 
 ## Azure and Foundry resources
@@ -502,6 +664,9 @@ Use this during the portal orientation segment, or as the full replacement if pa
 - [ ] Access and compliance screenshots
 - [ ] Trace list and trace detail screenshots
 - [ ] Evaluation summary and failing-row screenshots
+- [ ] Model catalog screenshot showing the "Claude" search results (all 10 models) for the positioning addendum
+- [ ] Deployment pane screenshot showing the hosting option surfaced as a model version, for the Hosted on Azure vs Hosted on Anthropic explanation
+- [ ] One-page positioning summary template: model, framework, observability, owner
 - [ ] All screenshots recaptured within 48 hours of delivery and marked **Verify in the current Microsoft Foundry portal**
 
 ---
@@ -519,6 +684,8 @@ Use this during the portal orientation segment, or as the full replacement if pa
 | Are preview features handled safely? | Yes. Preview capabilities are mentioned with prepared evidence and are never lab blockers. |
 | Are lab steps realistic for 30 minutes? | Yes, provided the instructor preprovisions the environment and the evaluation. |
 | Are prerequisites clear? | Yes. Access, modes, and instructor preparation are stated before any lab step. |
+| Are competitive claims defensible? | Yes. The positioning addendum states caveats, avoids parity claims, and requires portal and Learn verification. |
+| Is partner tooling handled neutrally? | Yes. Arize is presented as an OpenTelemetry coexistence pattern with an explicit data-duplication governance warning. |
 | Are cleanup steps included? | Yes, scoped to instructor-owned cleanup. |
 
 ## Current documentation validation register
@@ -534,6 +701,10 @@ Validate these before every delivery against current Microsoft Learn documentati
 | 5 | Evaluation entry points, targets, and evaluator availability | Evaluator catalog and scope support change frequently |
 | 6 | Preview features: Trace Replay, Agent Monitoring Dashboard, trace evaluation, trace-to-dataset, recurring evaluations | Preview capabilities, permissions, and limits change quickly |
 | 7 | Region, quota, and network support for evaluation | Regional rollout is staged |
+| 8 | Which hosting options (Hosted on Azure / Hosted on Anthropic) each Foundry Claude model supports, plus deployment types and regions | All models are available in Foundry; the hosting matrix changes as models gain Azure hosting |
+| 8a | Azure-hosted feature gap list (server-side tools, MCP connector, Agent Skills, structured outputs, programmatic tool calling, Files API) | Anthropic closes these gaps over time; re-check before promising a limitation |
+| 9 | Microsoft Agent Framework and Foundry Agent Service capabilities and GA versus preview status | Agent tooling is consolidating rapidly |
+| 10 | Partner observability integration mechanics and Azure Native ISV availability | Partner integrations and marketplace listings change |
 
 ## Official Microsoft sources
 
@@ -547,6 +718,13 @@ Validate these before every delivery against current Microsoft Learn documentati
 - [Rate limits, region support, and enterprise features for evaluation](https://learn.microsoft.com/azure/foundry/concepts/evaluation-regions-limits-virtual-network)
 - [Microsoft Foundry risk and safety evaluations Transparency Note](https://learn.microsoft.com/azure/foundry/concepts/safety-evaluations-transparency-note)
 - [What's new in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/whats-new-foundry)
+- [Explore the Microsoft Foundry model catalog](https://learn.microsoft.com/azure/foundry/how-to/model-catalog-overview)
+- [Microsoft Agent Framework documentation](https://learn.microsoft.com/agent-framework/)
+- [What is Microsoft Foundry Agent Service?](https://learn.microsoft.com/azure/ai-foundry/agents/overview)
+
+**Provider documentation (non-Microsoft, cited for model-specific facts):**
+
+- [Claude in Microsoft Foundry — Anthropic documentation](https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry) — authoritative source for the hosting-option split, the per-model Hosted on Azure / Hosted on Anthropic table, the Azure-hosted feature gap, CCU billing, and SDK language support. Note: this page uses classic portal navigation in places; do not reuse those paths in workshop content.
 
 > Capabilities, preview status, regional availability, role names, and navigation can change. **Verify in the current Microsoft Foundry portal** before every delivery.
 
