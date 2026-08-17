@@ -572,6 +572,7 @@ The following topics are integrated into the existing modules and do not add tim
 | **Evaluation: Safety evaluations transparency note** | Responsible AI and safety by design | Review the current transparency note or evaluator guidance and document limitations, intended use, human-review requirements, and prohibited conclusions. | Guided review | Evaluator limitations note |
 | **Evaluation: Supported evaluators** | Evaluations: measure what “good” means | Inspect the current evaluator catalog and select two quality evaluators and one safety evaluator appropriate to the scenario, target, and scope. | Participant task | Evaluator selection record |
 | **Evaluation: Run evaluations** | Evaluations: measure what “good” means | Run or open `<EVALUATION_NAME>` using `<EVALUATION_DATASET>`; inspect aggregate and row-level results and identify one pass and one failure. | Participant task | Evaluation result summary |
+| **Evaluation: Trace evaluation (preview)** | Evaluations: measure what “good” means | If enabled for the project, evaluate selected Application Insights traces without replaying requests; otherwise review a prepared trace-evaluation result and record the required permissions and data source. | Optional participant task or prepared fallback | Trace-evaluation evidence |
 | **Evaluation: Optimization** | Lifecycle management and release gates | Compare two prepared instruction or configuration variants using evaluation results; recommend keep, revise, or reject and explain the evidence. | Participant task | Optimization decision |
 | **Evaluation: AI red teaming** | Responsible AI and safety by design | Run synthetic prompt-injection, sensitive-data, ambiguity, and unsupported-policy tests; classify the response as refuse, clarify, safe-complete, or escalate. | Participant task | Red-team test record |
 | **Evaluation: Evaluations in CI/CD pipelines** | Lifecycle management and release gates | Design a release gate on paper: dataset version, evaluator thresholds, approval owner, failure action, and retest requirement. No external CI/CD tool is required. | Design exercise | Release-gate specification |
@@ -581,6 +582,23 @@ The following topics are integrated into the existing modules and do not add tim
 > **Portal variance rule:** Header names, entry points, evaluator availability, regional support, and preview status can change. **Verify in the current Microsoft Foundry portal** and current Microsoft Learn documentation before delivery. Do not substitute a remembered legacy path.
 
 > **Scope rule:** The workshop remains centered on Microsoft Foundry and Azure. Agent 365 is out of scope and is not required for any topic, task, dependency, or demo.
+
+## Current preview-feature updates to validate
+
+The following capabilities are now documented by Microsoft as preview or fast-moving features. They strengthen the workshop story but must remain optional, instructor-led, or fallback-supported until validated in the target tenant, region, role configuration, and **Microsoft Foundry portal** experience.
+
+| Capability | Workshop treatment | Delivery rule |
+|---|---|---|
+| **Trace Replay (preview)** | Optional Module 6/7 walkthrough using a prepared trace. Show User and Trajectories views, span timing/token-cost inspection, filtering, and playthrough when available. | Do not make it a lab blocker. Requires trace data, Application Insights access, and appropriate Log Analytics access. **Verify in the current Microsoft Foundry portal.** |
+| **Trace-to-dataset generation (preview)** | Optional Module 8 bridge from production traces to a versioned evaluation dataset. Use prepared traces if the Data Generation experience is unavailable. | Treat generated samples as curated evidence, not a complete production corpus. Validate supported region, ingestion delay, privacy handling, and connected-resource access. |
+| **Agent Monitoring Dashboard (preview)** | Optional Module 7 guided review of token usage, latency, success rate, evaluation results, recurring evaluations, red-team scans, and alerts. | Use prepared screenshots/results when the dashboard or settings are not enabled. Monitoring data is stored in the connected Application Insights resource. |
+| **Recurring evaluations and alerts (preview)** | Module 7/8 design exercise: define schedule, sampling, threshold, owner, and failure action. | Do not promise production alerting or scheduling parity; confirm current support and limits before delivery. |
+| **Cloud AI red teaming** | Module 9 optional prepared run or portal/API-backed demonstration for an approved Foundry model or Foundry agent target. | Keep the core lab portal-first and synthetic-data-only. Do not require local tooling. Validate target, risk category, region, quota, and human review. |
+| **Trace evaluation (preview)** | Module 8 optional evaluation of Application Insights traces using the current trace data source, including by trace IDs or agent filter with intelligent sampling. | Requires a connected Application Insights resource, trace-compatible telemetry, managed-identity Log Analytics access, and a supported region. Use a prepared result if any prerequisite is missing. |
+| **Conversation-level and synthetic-data evaluation (preview)** | Instructor-only extension for teams that need full-conversation or no-dataset coverage. | Keep outside the critical path for the four-hour lab; mark preview and validate evaluator/region support. |
+| **Foundry RBAC role rename** | Use current names such as **Foundry User** while noting that older names may still appear during rollout. | Confirm display names and permissions in current documentation; do not assume a renamed role is available in every surface. |
+
+> **Preview policy:** Preview features have no production SLA and may have constrained capabilities. Label every slide, screenshot, lab task, and fallback as **Preview / validate before delivery** when it uses one of these capabilities.
 
 ## Lab preparation values
 
@@ -892,8 +910,11 @@ Evaluation dataset: <EVALUATION_DATASET>
 8. Record the trace ID, total duration, slowest span, errors, and sensitive-data observations.
 9. If permitted, open the corresponding Application Insights experience in Azure Monitor and confirm correlation.
 10. Capture only sanitized screenshots.
+11. If the instructor has enabled **Trace Replay (preview)**, open a Conversation ID or Trace ID and inspect the User and Trajectories views. Record one slow, costly, or failed span. If unavailable, use the prepared replay screenshot and document the missing prerequisite.
 
-> **Portal variance note:** The current documentation places traces in the project's Agents/Traces experience. **Verify in the current Microsoft Foundry portal** before delivery.
+> **Portal variance note:** Use the project's current tracing experience. **Verify in the current Microsoft Foundry portal** before delivery.
+>
+> **Preview / validate before delivery:** Trace Replay requires trace data, Application Insights access, and suitable Log Analytics permissions. It is not a lab blocker.
 
 **Instructor notes:**
 
@@ -946,12 +967,14 @@ Evaluation dataset: <EVALUATION_DATASET>
 8. Identify the retention period or policy question that must be answered.
 9. Record a correlation strategy using trace ID, response ID, deployment/version, and evaluation run.
 10. Share one observation and one unanswered operational question.
+11. If the **Agent Monitoring Dashboard (preview)** is available, compare its token, latency, success-rate, and evaluation views with the trace evidence. Record one dashboard limitation or missing signal.
 
 **Instructor notes:**
 
 - A successful HTTP request can still be a quality or safety failure.
 - Avoid universal threshold recommendations; thresholds depend on the use case, risk, traffic, and user expectations.
 - Encourage alerting on symptoms that have actionable owners.
+- The Agent Monitoring Dashboard, recurring evaluations, red-team scans, and alerts are preview capabilities. Use prepared evidence if the settings are not enabled.
 
 **Expected result:** One actionable alert definition, one dashboard audience, and one telemetry-governance improvement.
 
@@ -1004,8 +1027,11 @@ Evaluation dataset: <EVALUATION_DATASET>
 11. Identify the lowest-scoring or failed case and open its details.
 12. Decide: Pass, Conditional pass, or Fail. Cite the metric, case, threshold, and owner for remediation.
 13. Save a sanitized screenshot or result link according to workshop policy.
+14. If trace evaluation is enabled, optionally select the current trace data source and evaluate by trace IDs or an agent filter with intelligent sampling. Do not replay production requests. If unavailable, review a prepared trace-evaluation result and record the missing prerequisite.
 
 > **Portal variance note:** Evaluation entry points and available evaluators depend on the target and current feature availability. **Verify in the current Microsoft Foundry portal** rather than guessing.
+>
+> **Preview / validate before delivery:** Trace evaluation, conversation-level evaluation, and synthetic-data evaluation are preview or scope-dependent capabilities. Confirm the supported region, target, evaluator, data source, and managed-identity permissions.
 
 **Instructor notes:**
 
@@ -1013,6 +1039,7 @@ Evaluation dataset: <EVALUATION_DATASET>
 - Safety evaluators, agent evaluators, and conversation-level evaluators have target/scope requirements.
 - Do not present AI-assisted evaluation as objective truth. Review judge limitations, false positives, and human validation.
 - If a live evaluation is delayed, use prepared results and have participants perform the interpretation steps.
+- For trace-based evaluation, allow for Application Insights ingestion delay and verify that the project's managed identity can read the linked Log Analytics data.
 
 **Expected result:** A completed or prepared evaluation with a documented release recommendation and remediation owner.
 
@@ -1065,6 +1092,7 @@ Evaluation dataset: <EVALUATION_DATASET>
 8. Record one known limitation or preview dependency.
 9. Record one control that must be implemented outside the model layer.
 10. Produce a one-paragraph responsible AI readiness statement.
+11. If an approved cloud AI red-team result is available, review its risk categories and human-review notes; otherwise use the prepared adversarial test record. Do not run unapproved adversarial content against a customer or production endpoint.
 
 **Instructor notes:**
 
@@ -1289,7 +1317,7 @@ Save as `<EVALUATION_DATASET>.jsonl` if a local file is required:
 
 **Action:**
 
-1. Open the project's current **Agents/Traces** experience.
+1. Open the project's current tracing experience.
 2. Find the interaction by time, response ID, or trace ID.
 3. Open the trace and inspect spans, duration, status, and input/output visibility.
 4. Optionally open the corresponding Azure Monitor view.
@@ -1514,6 +1542,14 @@ Validate the workshop against these sources during preparation and again before 
 - [Run evaluations from the Microsoft Foundry portal](https://learn.microsoft.com/azure/foundry/how-to/evaluate-generative-ai-app)
 - [Responsible AI for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/responsible-use-of-ai-overview)
 - [Feature availability across cloud regions](https://learn.microsoft.com/azure/foundry/reference/region-support)
+- [What's new in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/whats-new-foundry)
+- [Monitor agents with the Agent Monitoring Dashboard (preview)](https://learn.microsoft.com/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard)
+- [Review agent interactions with Trace Replay (preview)](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-replay)
+- [Convert agent traces into evaluation datasets (preview)](https://learn.microsoft.com/azure/foundry/observability/how-to/traces-to-dataset)
+- [Run evaluations in the cloud](https://learn.microsoft.com/azure/foundry/how-to/develop/cloud-evaluation)
+- [Rate limits, region support, and enterprise features for evaluation](https://learn.microsoft.com/azure/foundry/concepts/evaluation-regions-limits-virtual-network)
+- [Run AI Red Teaming Agent in the cloud](https://learn.microsoft.com/azure/foundry/how-to/develop/run-ai-red-teaming-cloud)
+- [Microsoft Foundry risk and safety evaluations Transparency Note](https://learn.microsoft.com/azure/foundry/concepts/safety-evaluations-transparency-note)
 
 > Product capabilities, preview status, regional availability, role names, and portal navigation can change. **Verify in the current Microsoft Foundry portal** and current Microsoft Learn documentation before every delivery.
 
@@ -1536,7 +1572,9 @@ The following items are the highest-drift areas in this workshop. Validate each 
 | 9 | Model and feature availability in `<REGION>` | Slide 12, Modules 1-2, Module 4 | Regional rollout is staged | Confirm against current region-support documentation |
 | 10 | Network-isolation limitations for observability features | Slide 12, Slide 16, Instructor notes | Isolation support lags feature GA | Confirm before promising isolated-network parity |
 | 11 | Content safety, prompt shields, and guardrail control names | Slide 13, Slide 14, Module 4, Module 9 | Safety control naming and defaults evolve | Confirm current control names and default filter levels |
-| 12 | Any SDK, API, or package reference added later | Not currently present in this workshop | Package names, API surfaces, and retirement dates change | If code is added, validate package names, auth model, and support dates before use |
+| 12 | Preview observability and evaluation features: Trace Replay, trace-to-dataset, Agent Monitoring Dashboard, recurring evaluations, alerts, trace evaluation, synthetic/conversation evaluation, and cloud red teaming | Portal topic coverage map, Modules 6-9, Demo steps 5-7, Appendix slides | Preview capabilities, permissions, regions, ingestion delays, and limits change quickly | Validate each capability in the target tenant; retain prepared evidence and a non-preview fallback |
+| 13 | Evaluation rate limits, supported regions, network isolation, storage, and managed-identity permissions | Modules 1, 4, 6, 8; assets and preflight | Evaluation availability and limits vary by region, target, network, and role | Check current regional tables, quotas, connected-resource access, and role names |
+| 14 | Any SDK, API, or package reference added later | Not currently present in this workshop | Package names, API surfaces, and retirement dates change | If code is added, validate package names, auth model, and support dates before use |
 
 > **Deliberate omission:** This workshop contains **no SDK, CLI, or API code samples**. That is intentional. Portal-first instructions age more predictably than code samples, and it removes the risk of shipping a deprecated pattern. If your delivery requires code, generate it against current documentation on the day and mark it as an example to validate.
 

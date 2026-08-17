@@ -505,10 +505,11 @@ Start from the **NEW Microsoft Foundry portal** trace and use Azure Monitor as a
 - Use traces to investigate latency and failure patterns.
 - Protect trace content with access, retention, and redaction controls.
 - Treat availability and retention as current feature-validation items.
+- **Trace Replay (preview)** can show User and Trajectories views, span timing/token cost, filters, and playthrough.
 
 **Speaker notes**
 
-Tracing is a low-friction diagnostic starting point, but it does not prove quality. Explain that supported scenarios and preview coverage can change. Show one normal trace and one trace with a slow or failed span.
+Tracing is a low-friction diagnostic starting point, but it does not prove quality. Explain that supported scenarios and preview coverage can change. If enabled, demonstrate Trace Replay as an optional troubleshooting aid; otherwise use a prepared trace. Mark the capability **Preview / validate before delivery** and do not make it a lab blocker.
 
 **Suggested visual**
 
@@ -535,10 +536,11 @@ Use the current tracing experience inside the **NEW Microsoft Foundry portal**. 
 - Measure quality, safety, task behavior, and business-specific criteria.
 - Version prompts, models, datasets, evaluators, and thresholds.
 - Compare results over time and connect them to release decisions.
+- **Trace evaluation (preview)** can score Application Insights traces by trace ID or agent filter without replaying production requests.
 
 **Speaker notes**
 
-Evaluation availability depends on target, scope, data, region, and feature status. Treat AI-assisted evaluators as measurements with limitations; pair them with representative data, deterministic checks, and human review.
+Evaluation availability depends on target, scope, data, region, and feature status. Treat AI-assisted evaluators as measurements with limitations; pair them with representative data, deterministic checks, and human review. Trace evaluation, conversation-level evaluation, and synthetic-data evaluation are preview or scope-dependent; use prepared results when prerequisites are missing.
 
 **Suggested visual**
 
@@ -565,10 +567,11 @@ Use the current evaluation creation experience or target entry point in the **NE
 - **Validate:** functional, quality, safety, security, performance, and cost tests.
 - **Release:** approval, version record, thresholds, rollback, and support readiness.
 - **Operate:** monitoring, incident response, periodic evaluation, and retirement.
+- **Preview path:** recurring evaluations, intelligent sampling, and alerts may extend the operate stage when enabled.
 
 **Speaker notes**
 
-Treat prompts, grounding data, models, deployments, guardrails, and evaluator settings as versioned configuration. Define which changes require full reevaluation.
+Treat prompts, grounding data, models, deployments, guardrails, and evaluator settings as versioned configuration. Define which changes require full reevaluation. Recurring evaluations and alerts are preview capabilities and must have validated thresholds, owners, and fallback procedures.
 
 **Suggested visual**
 
@@ -947,6 +950,7 @@ Use current **NEW Microsoft Foundry portal** evidence to answer the questions. *
 - Create and manage Microsoft Foundry projects.
 - Compliance, security, RBAC, and responsible AI guidance.
 - Tracing, evaluations, region support, and Azure Monitor guidance.
+- Current preview references: Trace Replay, trace-to-dataset generation, Agent Monitoring Dashboard, cloud evaluation, and cloud AI red teaming.
 
 **Speaker notes**
 
@@ -975,6 +979,7 @@ Documentation validation must include the live **NEW Microsoft Foundry portal**.
 - [ ] Screenshots use synthetic or sanitized data only.
 - [ ] The 4-hour agenda totals 240 minutes.
 - [ ] The lab includes setup validation, troubleshooting, evidence capture, and cleanup.
+- [ ] Preview features are labeled **Preview / validate before delivery** and have prepared fallbacks.
 - [ ] Current Microsoft Learn documentation and portal navigation were validated before delivery.
 
 ---
@@ -1006,3 +1011,33 @@ Use the full coverage matrix in the workshop guide to assign each topic to a mod
 **Portal verification note**
 
 Header names, evaluator availability, region support, and portal entry points must be checked before delivery. **Verify in the current Microsoft Foundry portal** and current Microsoft Learn documentation.
+
+---
+
+## Appendix slide E — Current preview capabilities to validate
+
+**Subtitle / key message:** Use current preview capabilities to enrich the workshop, never to create an unverified lab dependency.
+
+**Bullets**
+
+- **Trace Replay (preview):** User and Trajectories views, span filtering, token-cost/duration inspection, and playthrough.
+- **Trace-to-dataset generation (preview):** Curate representative production traces into a versioned evaluation dataset.
+- **Agent Monitoring Dashboard (preview):** Review token usage, latency, success rate, evaluation results, recurring evaluations, red-team scans, and alerts.
+- **Trace evaluation (preview):** Score Application Insights traces by trace ID or agent filter with intelligent sampling.
+- **Cloud AI red teaming and conversation/synthetic evaluations:** Use only with validated target, region, permissions, quotas, and human review.
+
+**Speaker notes**
+
+These capabilities are documented in current Microsoft Learn material but may have constrained capabilities and no production SLA. Label each as **Preview / validate before delivery**. Keep the core four-hour path runnable with prepared screenshots, traces, and evaluation results. Do not add local tooling, legacy workflows, or unrelated productivity-agent dependencies.
+
+**Suggested visual**
+
+Preview badge matrix with columns **Capability**, **Evidence**, **Prerequisites**, and **Fallback**. Use amber accents to distinguish preview from generally available foundations.
+
+**Demo or lab tie-in**
+
+Use this as an instructor-only decision slide before Modules 6–9. Select at most one optional preview walkthrough for the live session; keep the remaining capabilities as prepared evidence or design exercises.
+
+**Portal verification note**
+
+All entry points, labels, region support, role names, and preview status must be verified in the **NEW Microsoft Foundry portal** and current Microsoft Learn documentation immediately before delivery.
