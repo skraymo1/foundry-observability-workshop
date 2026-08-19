@@ -72,7 +72,7 @@ jobs:
           GIT_SHA: ${{ github.sha }}
           GIT_REF: ${{ github.ref_name }}
         run: |
-          python ci-cd/scripts/run_eval.py \
+          python scripts/run_eval.py \
             --config eval-config.yaml \
             --output results \
             ${{ (github.event_name == 'workflow_dispatch' && inputs.strict == false) && '--no-fail' || '' }}
@@ -84,14 +84,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: foundry-eval-results-${{ github.run_number }}
-          path: ci-cd/results/
+          path: results/
           retention-days: 30
 
       - name: Publish job summary
         if: always()
         run: |
-          if [ -f ci-cd/results/summary.md ]; then
-            cat ci-cd/results/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f results/summary.md ]; then
+            cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "No summary produced -- the evaluation step failed before writing results." >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -102,7 +102,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = 'ci-cd/results/summary.md';
+            const path = 'results/summary.md';
             const body = fs.existsSync(path)
               ? fs.readFileSync(path, 'utf8')
               : '### Foundry evaluation\n\nNo results were produced. Check the workflow logs.';
