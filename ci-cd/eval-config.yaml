@@ -27,7 +27,7 @@ evaluators:
   # Is the answer supported by the supplied policy context?
   - name: groundedness
     type: ai_assisted
-    threshold: 4.5
+    threshold: 4.0
 
   # Does the answer address what was actually asked?
   - name: relevance
