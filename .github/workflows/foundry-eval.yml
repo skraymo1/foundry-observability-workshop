@@ -72,7 +72,7 @@ jobs:
           GIT_SHA: ${{ github.sha }}
           GIT_REF: ${{ github.ref_name }}
         run: |
-          python scripts/run_eval.py \
+          python ci-cd/scripts/run_eval.py \
             --config eval-config.yaml \
             --output results \
             ${{ (github.event_name == 'workflow_dispatch' && inputs.strict == false) && '--no-fail' || '' }}
@@ -90,8 +90,8 @@ jobs:
       - name: Publish job summary
         if: always()
         run: |
-          if [ -f results/summary.md ]; then
-            cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f ci-cd/results/summary.md ]; then
+            cat ci-cd/results/summary.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "No summary produced -- the evaluation step failed before writing results." >> "$GITHUB_STEP_SUMMARY"
           fi
