@@ -232,19 +232,19 @@ Use the current **NEW Microsoft Foundry portal** terminology and project model. 
 
 **Bullets**
 
-- Establish project context before changing resources or running tests.
-- Use the current build and discovery experiences for models and project assets.
-- Use the current operations and compliance experiences for governance review.
-- Use the current tracing and evaluation entry points for evidence.
-- Use portal Docs and current guidance when labels differ.
+- Establish project context first using the upper-left project selector.
+- **Build** creates: Agents, Deployments, Services, Tools, Knowledge, Guardrails, Memory, Data.
+- **Build** optimizes: Evaluations and Fine-tune.
+- **Operate** governs: Compliance (Policies, Assets, Guardrails, Security posture).
+- **Manage** administers: Project details, Users, Connected resources. **Discover** browses the catalog.
 
 **Speaker notes**
 
-Explain that labels and grouping can evolve. Demonstrate how to orient yourself in the **NEW Microsoft Foundry portal**, then frame each workflow by its outcome: select a project, review access, inspect compliance, locate traces, or run an evaluation.
+Walk the top-level areas — **Home**, **Discover**, **Build**, **Operate**, **Manage** — then show the Build left pane grouped into **Create** and **Optimize**. Note that model deployments live under **Build** > **Deployments** (not a "Models" node in the left pane), and evaluations live under **Build** > **Evaluations**. Open a deployment to show the details pane with **Open in playground**, **Project endpoint**, **API Key**, and **Call this model** sample code — a natural moment to make the key-versus-Entra point. Confirm the **New Foundry** toggle is on. Labels can evolve; frame each workflow by outcome: select a project, review access, inspect compliance, locate traces, run an evaluation.
 
 **Suggested visual**
 
-Outcome-to-entry-point table with five rows and a “verify current navigation” badge on every row.
+Annotated **NEW Microsoft Foundry portal** screenshot of the **Build** area showing the top navigation and the left pane **Create**/**Optimize** groups, with a "verify current navigation" badge.
 
 **Demo or lab tie-in**
 
@@ -341,7 +341,7 @@ Review access without changing assignments in Lab Module 3.
 
 **Portal verification note**
 
-Review the current administration experience and role labels. **Verify in the current Microsoft Foundry portal**. Validate role naming against current Microsoft Learn documentation.
+Review **Manage** > **Project details** > **Users** and current Foundry role labels. **Verify in the current Microsoft Foundry portal**. Validate role naming against current Microsoft Learn documentation.
 
 ---
 

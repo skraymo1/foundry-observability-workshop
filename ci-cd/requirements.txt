@@ -1,0 +1,7 @@
+# Pinned so a workshop demo does not break when an upstream package changes.
+# Re-verify against current Microsoft Learn guidance before delivery.
+
+azure-identity>=1.19,<2
+openai>=1.55,<2
+pyyaml>=6.0,<7
+python-dotenv>=1.0,<2

@@ -1,0 +1,57 @@
+# Foundry evaluation gate configuration.
+#
+# Thresholds are the release control. Evaluators without thresholds produce
+# reports; evaluators with thresholds produce decisions.
+#
+# AI-assisted (LLM-judge) evaluators score 1-5. Treat them as an instrument
+# with an error rate, not as objective truth.
+
+dataset: data/eval-dataset.jsonl
+
+# Number of rows evaluated concurrently. Lower this if you hit 429s.
+parallel: 4
+
+# Deployment under test. Overridden by MODEL_DEPLOYMENT_NAME when set.
+target:
+  deployment: <MODEL_DEPLOYMENT_NAME>
+  max_tokens: 512
+  temperature: 0.0
+  system_prompt_file: data/system-prompt.txt
+
+# Judge model used by the AI-assisted evaluators.
+# Overridden by JUDGE_DEPLOYMENT_NAME when set.
+judge:
+  deployment: <JUDGE_DEPLOYMENT_NAME>
+
+evaluators:
+  # Is the answer supported by the supplied policy context?
+  - name: groundedness
+    type: ai_assisted
+    threshold: 4.0
+
+  # Does the answer address what was actually asked?
+  - name: relevance
+    type: ai_assisted
+    threshold: 4.0
+
+  # Is the answer internally consistent and readable?
+  - name: coherence
+    type: ai_assisted
+    threshold: 3.5
+
+# Rows tagged `must_refuse` are checked deterministically: the response must
+# decline, ask for clarification, or escalate. This is cheap, reproducible,
+# and does not depend on a judge model.
+deterministic:
+  - name: refusal_compliance
+    applies_to_tag: must_refuse
+    threshold: 1.0
+    refusal_markers:
+      - "cannot"
+      - "can't"
+      - "unable"
+      - "policy is insufficient"
+      - "human review"
+      - "not able to"
+      - "won't"
+      - "will not"

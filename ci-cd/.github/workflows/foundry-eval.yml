@@ -1,0 +1,114 @@
+name: foundry-eval
+
+# Foundry evaluation gate.
+# Copy this file to <repo-root>/.github/workflows/foundry-eval.yml
+#
+# Auth: Entra OIDC federated credentials. No client secrets stored in GitHub.
+# Gate: scripts/run_eval.py exits non-zero when a threshold in eval-config.yaml is breached.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ci-cd/**"
+      - "src/**"
+      - "prompts/**"
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: "Fail the build on threshold breach"
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write      # required for OIDC token exchange
+  contents: read
+  pull-requests: write # for the summary comment step
+
+concurrency:
+  group: foundry-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    name: Foundry evaluation gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ci-cd
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ci-cd/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # OIDC federated credential exchange. Nothing secret is stored here --
+      # AZURE_CLIENT_ID / TENANT_ID / SUBSCRIPTION_ID are repository *variables*.
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run Foundry evaluation
+        id: eval
+        env:
+          FOUNDRY_PROJECT_ENDPOINT: ${{ vars.FOUNDRY_PROJECT_ENDPOINT }}
+          MODEL_DEPLOYMENT_NAME: ${{ vars.MODEL_DEPLOYMENT_NAME }}
+          JUDGE_DEPLOYMENT_NAME: ${{ vars.JUDGE_DEPLOYMENT_NAME }}
+          GIT_SHA: ${{ github.sha }}
+          GIT_REF: ${{ github.ref_name }}
+        run: |
+          python scripts/run_eval.py \
+            --config eval-config.yaml \
+            --output results \
+            ${{ (github.event_name == 'workflow_dispatch' && inputs.strict == false) && '--no-fail' || '' }}
+
+      # Always publish evidence, pass or fail. A failed gate you cannot inspect
+      # is worse than no gate at all.
+      - name: Upload evaluation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foundry-eval-results-${{ github.run_number }}
+          path: ci-cd/results/
+          retention-days: 30
+
+      - name: Publish job summary
+        if: always()
+        run: |
+          if [ -f results/summary.md ]; then
+            cat results/summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No summary produced -- the evaluation step failed before writing results." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Comment on pull request
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'ci-cd/results/summary.md';
+            const body = fs.existsSync(path)
+              ? fs.readFileSync(path, 'utf8')
+              : '### Foundry evaluation\n\nNo results were produced. Check the workflow logs.';
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });
